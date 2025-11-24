@@ -1,45 +1,153 @@
-let questions = [];
+// let questions = [];
+// let index = 0;
+// let score = 0;
+
+// const questionEl = document.getElementById("question");
+// const optionsEl = document.getElementById("options");
+// const scoreBox = document.getElementById("scoreBox");
+// const newGameBtn = document.getElementById("newGame");
+
+// function fetchQuestions() {
+//     questionEl.textContent = "Loading questions...";
+//     optionsEl.innerHTML = "";
+//     scoreBox.textContent = "";
+
+//     fetch("https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple")
+//     .then(res => res.json())
+//     .then(data => {
+//         questions = data.results.map(q => formatQuestion(q));
+//         index = 0;
+//         score = 0;
+//     })
+//     .catch(() => {
+//         questionEl.textContent = "Failed to load questions. Try again.";
+//     });
+// }
+
+// function formatQuestion(q) {
+//     const options = [...q.incorrect_answers];
+//     const correctPosition = Math.floor(Math.random() * 5);
+//     options.splice(correctPosition, 0, q.correct_answer);
+
+//     return {
+//     question: q.question,
+//     options: options,
+//     answer: correctPosition
+//     };
+// }
+
+// function loadQuestion() {
+//     if (index >= questions.length) return endQuiz();
+
+//     const q = questions[index];
+//     questionEl.innerHTML = q.question;
+//     optionsEl.innerHTML = "";
+
+//     q.options.forEach((opt, i) => {
+//         const div = document.createElement("div");
+//         div.className = "option";
+//         div.innerHTML = opt;
+
+//         div.onclick = () => checkAnswer(i, div);
+//         optionsEl.appendChild(div);
+//     });
+// }
+
+// function checkAnswer(selected, selectedDiv) {
+//     const correct = questions[index].answer;
+
+//     Array.from(optionsEl.children).forEach(opt => opt.style.pointerEvents = "none");
+
+//     if (selected === correct) {
+//         selectedDiv.style.background = "#4caf50";
+//         score++;
+//     } 
+//     else {
+//         selectedDiv.style.background = "#f44336";
+//         optionsEl.children[correct].style.background = "#4caf50";
+//     }
+
+//     setTimeout(() => {
+//         index++;
+//         loadQuestion();
+//     }, 900);
+// }
+
+// function endQuiz() {
+//     questionEl.innerHTML = score >= 3 ? "<center>🎉 Congratulations! You Won!</center" : "<center>You finished the quiz!</center";
+
+//     optionsEl.innerHTML = "";
+//     scoreBox.innerHTML = `Your Score: <strong>${score} / ${questions.length}</strong>`;
+//     newGameBtn.style.display = "block";
+// }
+
+// newGameBtn.onclick = () => {
+//     newGameBtn.style.display = "none";
+//     fetchQuestions();
+// };
+
+// fetchQuestions();
+
+// ==========================
+//       QUIZ DATA
+// ==========================
+let questions = [
+    {
+        question: "What is the capital of India?",
+        options: ["Mumbai", "New Delhi", "Kolkata", "Chennai"],
+        answer: 1
+    },
+    {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Earth", "Venus", "Mars", "Jupiter"],
+        answer: 2
+    },
+    {
+        question: "Who wrote the National Anthem of India?",
+        options: ["Bankim Chandra", "Sarojini Naidu", "Tagore", "Premchand"],
+        answer: 2
+    },
+    {
+        question: "Which is the largest ocean?",
+        options: ["Atlantic", "Indian", "Pacific", "Arctic"],
+        answer: 2
+    },
+    {
+        question: "HTML stands for?",
+        options: [
+            "Hyper Text Makeup Language",
+            "HighText Markup Language",
+            "Hyper Text Markup Language",
+            "Hyper Tool Multi Language"
+        ],
+        answer: 2
+    }
+];
+
 let index = 0;
 let score = 0;
+let timer;
+let timeLeft = 10;
 
 const questionEl = document.getElementById("question");
 const optionsEl = document.getElementById("options");
 const scoreBox = document.getElementById("scoreBox");
 const newGameBtn = document.getElementById("newGame");
 
-function fetchQuestions() {
-    questionEl.textContent = "Loading questions...";
-    optionsEl.innerHTML = "";
-    scoreBox.textContent = "";
-
-    fetch("https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple")
-    .then(res => res.json())
-    .then(data => {
-        questions = data.results.map(q => formatQuestion(q));
-        index = 0;
-        score = 0;
-    })
-    .catch(() => {
-        questionEl.textContent = "Failed to load questions. Try again.";
-    });
-}
-
-function formatQuestion(q) {
-    const options = [...q.incorrect_answers];
-    const correctPosition = Math.floor(Math.random() * 5);
-    options.splice(correctPosition, 0, q.correct_answer);
-
-    return {
-    question: q.question,
-    options: options,
-    answer: correctPosition
-    };
-}
-
+// ==========================
+//       LOAD QUESTION
+// ==========================
 function loadQuestion() {
     if (index >= questions.length) return endQuiz();
 
+    timeLeft = 10;
+    updateTimer();
+
+    clearInterval(timer);
+    timer = setInterval(countDown, 1000);
+
     const q = questions[index];
+
     questionEl.innerHTML = q.question;
     optionsEl.innerHTML = "";
 
@@ -50,10 +158,52 @@ function loadQuestion() {
 
         div.onclick = () => checkAnswer(i, div);
         optionsEl.appendChild(div);
+        div.style.pointerEvents = "auto";
+        div.style.background = "#e3e3e3";
     });
 }
 
+// ==========================
+//         TIMER
+// ==========================
+function countDown() {
+    timeLeft--;
+    updateTimer();
+
+    if (timeLeft <= 0) {
+        clearInterval(timer);
+        timeUp();
+    }
+}
+
+function updateTimer() {
+    scoreBox.innerHTML = `⏳ Time Left: <strong>${timeLeft}</strong> seconds<br>Score: ${score}`;
+}
+
+// ==========================
+//        TIME UP LOGIC
+// ==========================
+function timeUp() {
+    questionEl.innerHTML += "<br><span style='color:red; font-size:16px;'>Time Up!</span>";
+
+    const correct = questions[index].answer;
+
+    Array.from(optionsEl.children).forEach(opt => opt.style.pointerEvents = "none");
+
+    optionsEl.children[correct].style.background = "#4caf50"; // highlight correct
+
+    setTimeout(() => {
+        index++;
+        loadQuestion();
+    }, 1000);
+}
+
+// ==========================
+//     CHECK ANSWER
+// ==========================
 function checkAnswer(selected, selectedDiv) {
+    clearInterval(timer);
+
     const correct = questions[index].answer;
 
     Array.from(optionsEl.children).forEach(opt => opt.style.pointerEvents = "none");
@@ -61,8 +211,7 @@ function checkAnswer(selected, selectedDiv) {
     if (selected === correct) {
         selectedDiv.style.background = "#4caf50";
         score++;
-    } 
-    else {
+    } else {
         selectedDiv.style.background = "#f44336";
         optionsEl.children[correct].style.background = "#4caf50";
     }
@@ -73,17 +222,31 @@ function checkAnswer(selected, selectedDiv) {
     }, 900);
 }
 
+// ==========================
+//         END QUIZ
+// ==========================
 function endQuiz() {
-    questionEl.innerHTML = score >= 3 ? "<center>🎉 Congratulations! You Won!</center" : "<center>You finished the quiz!</center";
+    clearInterval(timer);
+
+    questionEl.innerHTML =
+        score >= 3
+            ? "<center>🎉 Congratulations! You Won!</center>"
+            : "<center>You finished the quiz!</center>";
 
     optionsEl.innerHTML = "";
     scoreBox.innerHTML = `Your Score: <strong>${score} / ${questions.length}</strong>`;
     newGameBtn.style.display = "block";
 }
 
+// ==========================
+//        NEW GAME
+// ==========================
 newGameBtn.onclick = () => {
     newGameBtn.style.display = "none";
-    fetchQuestions();
+    index = 0;
+    score = 0;
+    loadQuestion();
 };
 
-fetchQuestions();
+// START GAME
+loadQuestion();
