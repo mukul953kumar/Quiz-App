@@ -1,39 +1,60 @@
-body {
-      font-family: Arial, sans-serif;
-      background: #eef2f3;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+:root {
+  --bg-color: #eef2f3;
+  --box-bg: #fff;
+  --text-color: #333;
+  --option-bg: #e3e3e3;
+  --option-hover: #d1d1d1;
+  --shadow: rgba(0,0,0,0.1);
+}
 
-    .quiz-box {
-      width: 420px;
-      padding: 20px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --box-bg: #2d2d2d;
+  --text-color: #fff;
+  --option-bg: #404040;
+  --option-hover: #555;
+  --shadow: rgba(0,0,0,0.3);
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+.quiz-box {
+  width: 420px;
+  padding: 20px;
+  background: var(--box-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px var(--shadow);
+  transition: background 0.3s;
+}
 
     #question {
       font-size: 20px;
       margin-bottom: 15px;
     }
 
-    .option {
-      background: #e3e3e3;
-      padding: 12px;
-      border-radius: 8px;
-      margin: 8px 0;
-      cursor: pointer;
-      transition: 0.2s;
-      pointer-events: none;
-    }
+.option {
+  background: var(--option-bg);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 8px 0;
+  cursor: pointer;
+  transition: 0.2s;
+  pointer-events: auto;
+}
 
-    .option:hover {
-      background: #d1d1d1;
-    }
+.option:hover {
+  background: var(--option-hover);
+}
 
     #scoreBox {
       margin-top: 15px;
@@ -45,13 +66,60 @@ body {
 
     }
 
-    #newGame {
-      margin-top: 20px;
-      padding: 10px 15px;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      display: none;
-    }
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--option-bg);
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.theme-toggle:hover {
+  background: var(--option-hover);
+}
+
+.scoreboard {
+  margin-top: 20px;
+  padding: 15px;
+  background: var(--option-bg);
+  border-radius: 8px;
+  display: none;
+}
+
+.scoreboard h3 {
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.score-entry {
+  padding: 5px 0;
+  border-bottom: 1px solid var(--option-hover);
+}
+
+.scorecard {
+  display: flex;
+  justify-content: space-between;
+  background: var(--option-bg);
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+#newGame {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: none;
+}

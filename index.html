@@ -7,11 +7,20 @@
   <link rel="stylesheet" href="style.css">  
 </head>
 <body>
-
+  <button id="themeToggle" class="theme-toggle">🌙</button>
+  
   <div class="quiz-box">
+    <div id="scorecard" class="scorecard">
+      <span id="currentScore">Score: 0</span>
+      <span id="questionCounter">Question: 0/0</span>
+    </div>
     <h2 id="question">Loading questions...</h2>
     <div id="options"></div>
     <div id="scoreBox"></div>
+    <div id="scoreboard" class="scoreboard">
+      <h3>Scoreboard</h3>
+      <div id="scoreHistory"></div>
+    </div>
     <center>
         <button id="newGame">New Game</button>
     </center>
